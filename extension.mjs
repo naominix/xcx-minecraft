@@ -67,7 +67,15 @@ const en = {
     'mcwssMinecraft.fillTo': 'fill to corner 2 (the turtle) with [BLOCK]',
     'mcwssMinecraft.setPos': 'move player to x:[X] y:[Y] z:[Z]',
     'mcwssMinecraft.chat': 'send [TEXT] to chat',
-    'mcwssMinecraft.wait': 'wait until drawing finishes'
+    'mcwssMinecraft.wait': 'wait until drawing finishes',
+    'mcwssMinecraft.drawSphere': 'draw a sphere of radius [R] at the turtle with [BLOCK]',
+    'mcwssMinecraft.drawCircle': 'draw a circle of radius [R] at the turtle with [BLOCK]',
+    'mcwssMinecraft.drawLine': 'draw a line from the turtle to x:[X] y:[Y] z:[Z] with [BLOCK]',
+    'mcwssMinecraft.addPoint': 'remember the turtle as a face vertex',
+    'mcwssMinecraft.clearPoints': 'clear all remembered vertices',
+    'mcwssMinecraft.drawFace': 'draw a face through the remembered vertices with [BLOCK] (fill [FILL])',
+    'mcwssMinecraft.setPenRandom': 'set pen block to random',
+    'mcwssMinecraft.setRate': 'set drawing speed to [RATE] blocks/sec'
 };
 
 const ja = {
@@ -91,7 +99,15 @@ const ja = {
     'mcwssMinecraft.fillTo': '角2（タートルの場所）まで [BLOCK] で埋める',
     'mcwssMinecraft.setPos': 'プレイヤーを x:[X] y:[Y] z:[Z] へ移動',
     'mcwssMinecraft.chat': 'チャットに [TEXT] と送る',
-    'mcwssMinecraft.wait': '描き終わるまで待つ'
+    'mcwssMinecraft.wait': '描き終わるまで待つ',
+    'mcwssMinecraft.drawSphere': 'タートルの場所に半径 [R] の球を [BLOCK] で描く',
+    'mcwssMinecraft.drawCircle': 'タートルの場所に半径 [R] の円を [BLOCK] で描く',
+    'mcwssMinecraft.drawLine': 'タートルの場所から x:[X] y:[Y] z:[Z] まで線を [BLOCK] で引く',
+    'mcwssMinecraft.addPoint': '頂点をタートルの場所に覚える',
+    'mcwssMinecraft.clearPoints': '頂点を全部消す',
+    'mcwssMinecraft.drawFace': '覚えた頂点の面を [BLOCK] で描く（塗りつぶし [FILL]）',
+    'mcwssMinecraft.setPenRandom': 'ペンのブロックをランダムにする',
+    'mcwssMinecraft.setRate': '描く速さを [RATE] ブロック/秒にする'
 };
 
 const translations = {en, ja, 'ja-Hira': ja};
@@ -133,6 +149,11 @@ const BLOCK_MENU = [
     ['土', 'dirt'],
     ['丸石', 'cobblestone'],
     ['木材（オーク）', 'planks'],
+    ['木材（マツ）', 'planks_spruce'],
+    ['木材（シラカバ）', 'planks_birch'],
+    ['木材（ジャングル）', 'planks_jungle'],
+    ['木材（アカシア）', 'planks_acacia'],
+    ['木材（ダークオーク）', 'planks_dark_oak'],
     ['砂', 'sand'],
     ['砂利', 'gravel'],
     ['ガラス', 'glass'],
@@ -160,7 +181,23 @@ const BLOCK_MENU = [
     ['羊毛（茶）', 'wool_brown'],
     ['羊毛（緑）', 'wool_green'],
     ['羊毛（赤）', 'wool_red'],
-    ['羊毛（黒）', 'wool_black']
+    ['羊毛（黒）', 'wool_black'],
+    ['コンクリート（白）', 'concrete_white'],
+    ['コンクリート（オレンジ）', 'concrete_orange'],
+    ['コンクリート（マゼンタ）', 'concrete_magenta'],
+    ['コンクリート（空色）', 'concrete_light_blue'],
+    ['コンクリート（黄）', 'concrete_yellow'],
+    ['コンクリート（黄緑）', 'concrete_lime'],
+    ['コンクリート（ピンク）', 'concrete_pink'],
+    ['コンクリート（灰）', 'concrete_gray'],
+    ['コンクリート（薄灰）', 'concrete_light_gray'],
+    ['コンクリート（水色）', 'concrete_cyan'],
+    ['コンクリート（紫）', 'concrete_purple'],
+    ['コンクリート（青）', 'concrete_blue'],
+    ['コンクリート（茶）', 'concrete_brown'],
+    ['コンクリート（緑）', 'concrete_green'],
+    ['コンクリート（赤）', 'concrete_red'],
+    ['コンクリート（黒）', 'concrete_black']
 ];
 
 // The app destination, resolved by resolveBridge(): either from
@@ -436,12 +473,70 @@ class McwssMinecraftBlocks {
                     blockType: 'command',
                     text: translate('wait', '描き終わるまで待つ'),
                     arguments: {}
+                },
+                {
+                    opcode: 'drawSphere',
+                    blockType: 'command',
+                    text: translate('drawSphere', 'タートルの場所に半径 [R] の球を [BLOCK] で描く'),
+                    arguments: {R: number(5), BLOCK: blockArg()}
+                },
+                {
+                    opcode: 'drawCircle',
+                    blockType: 'command',
+                    text: translate('drawCircle', 'タートルの場所に半径 [R] の円を [BLOCK] で描く'),
+                    arguments: {R: number(5), BLOCK: blockArg()}
+                },
+                {
+                    opcode: 'drawLine',
+                    blockType: 'command',
+                    text: translate('drawLine', 'タートルの場所から x:[X] y:[Y] z:[Z] まで線を [BLOCK] で引く'),
+                    arguments: Object.assign(posArgs(), {BLOCK: blockArg()})
+                },
+                {
+                    opcode: 'addPoint',
+                    blockType: 'command',
+                    text: translate('addPoint', '頂点をタートルの場所に覚える'),
+                    arguments: {}
+                },
+                {
+                    opcode: 'clearPoints',
+                    blockType: 'command',
+                    text: translate('clearPoints', '頂点を全部消す'),
+                    arguments: {}
+                },
+                {
+                    opcode: 'drawFace',
+                    blockType: 'command',
+                    text: translate('drawFace', '覚えた頂点の面を [BLOCK] で描く（塗りつぶし [FILL]）'),
+                    arguments: {
+                        BLOCK: blockArg(),
+                        FILL: {type: 'string', menu: 'fillMenu', defaultValue: 'yes'}
+                    }
+                },
+                {
+                    opcode: 'setPenRandom',
+                    blockType: 'command',
+                    text: translate('setPenRandom', 'ペンのブロックをランダムにする'),
+                    arguments: {}
+                },
+                {
+                    opcode: 'setRate',
+                    blockType: 'command',
+                    text: translate('setRate', '描く速さを [RATE] ブロック/秒にする'),
+                    arguments: {RATE: number(240)}
                 }
             ],
             menus: {
                 blockMenu: {
                     acceptReporters: false,
                     items: BLOCK_MENU.map(([text, value]) => ({text, value}))
+                },
+                fillMenu: {
+                    acceptReporters: false,
+                    items: [
+                        {text: 'する', value: 'yes'},
+                        {text: 'しない', value: 'no'}
+                    ]
                 }
             }
         };
@@ -526,6 +621,38 @@ class McwssMinecraftBlocks {
 
     wait() {
         return sendOp('wait');
+    }
+
+    drawSphere(args) {
+        return sendOp('stuff.drawSphere', {r: num(args.R), block: String(args.BLOCK)});
+    }
+
+    drawCircle(args) {
+        return sendOp('stuff.drawCircle', {r: num(args.R), block: String(args.BLOCK)});
+    }
+
+    drawLine(args) {
+        return sendOp('stuff.drawLine', {x: num(args.X), y: num(args.Y), z: num(args.Z), block: String(args.BLOCK)});
+    }
+
+    addPoint() {
+        return sendOp('stuff.addPoint');
+    }
+
+    clearPoints() {
+        return sendOp('stuff.clearPoints');
+    }
+
+    drawFace(args) {
+        return sendOp('stuff.drawFace', {block: String(args.BLOCK), filled: String(args.FILL)});
+    }
+
+    setPenRandom() {
+        return sendOp('turtle.setPenRandom');
+    }
+
+    setRate(args) {
+        return sendOp('turtle.setRate', {rate: num(args.RATE)});
     }
 }
 
