@@ -6,7 +6,7 @@
  * address on the local network, so for classroom use this file
  * is hosted at a public https URL (GitHub Pages, like the other
  * Xcratch extensions). The app also serves it
- * (GET /scratch/extension.mjs, with the current token substituted
+ * (GET /scratch/mcwssMinecraft.mjs, with the current token substituted
  * in), which remains handy for development.
  *
  * How it finds the app: the "start" block takes the app link the
@@ -127,6 +127,8 @@ const entry = {
     extensionId: EXTENSION_ID,
     extensionURL: '',
     collaborator: 'naominix',
+    iconURL: EXTENSION_ICON,
+    insetIconURL: EXTENSION_ICON,
     get description() {
         return formatMessage({
             id: 'mcwssMinecraft.entry.description',
