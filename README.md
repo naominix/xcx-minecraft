@@ -9,8 +9,10 @@ Minecraft にタートルグラフィックスで描くための Xcratch 拡張�
 拡張ローダー（Extension Loader）に、次の URL を入力してください。
 
 ```
-https://naominix.github.io/xcx-minecraft/extension.mjs
+https://naominix.github.io/xcx-minecraft/mcwssMinecraft.mjs
 ```
+
+（改名前の `extension.mjs` の URL も、互換用に同一内容で残してあります。旧 URL で保存したプロジェクトもそのまま使えます）
 
 ## 使い方
 
@@ -25,7 +27,7 @@ https://naominix.github.io/xcx-minecraft/extension.mjs
 
 ## このリポジトリについて
 
-このリポジトリは拡張ファイルの公開場所です。拡張の原本は mcwss-microbit リポジトリの `scratch/extension.mjs` で、リリースに合わせてこのリポジトリへ複製しています。アプリと拡張の API バージョンが食い違うと、開始ブロックがバージョン不一致エラーで止まります（その場合は拡張を読み込み直してください）。
+このリポジトリは拡張ファイルの公開場所です。拡張の原本は mcwss-microbit リポジトリの `scratch/mcwssMinecraft.mjs` で、リリースに合わせてこのリポジトリへ複製しています。アプリと拡張の API バージョンが食い違うと、開始ブロックがバージョン不一致エラーで止まります（その場合は拡張を読み込み直してください）。
 
 ## License
 
